@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exemple de survol réutilisable avec position de souris</title>
+    <style>
+        /* Style pour l'élément à afficher au survol */
+        .elementAafficher {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            padding: 10px;
+            margin-top: 15px;
+            border: 1px solid #ccc;
+            z-index: 100; /* Assure que l'élément est au-dessus de tout */
+        }
+    </style>
+</head>
+<body>
+
+<!-- Éléments cibles réutilisables -->
+<a href="#" class="elementCible" data-text="Hello">Bonjour</a>
+<a href="#" class="elementCible" data-text="Good Bye">Au revoir</a>
+<a href="#" class="elementCible" data-text="Good Night">Bonne nuit</a>
+
+<!-- Élément à afficher réutilisable -->
+<div class="elementAafficher"></div>
+
+<script>
+    // Sélectionnez tous les éléments cibles
+    const elementsCibles = document.querySelectorAll('.elementCible');
+
+    // Sélectionnez l'élément à afficher
+    const elementAafficher = document.querySelector('.elementAafficher');
+
+    // Ajoutez un gestionnaire d'événement au survol de chaque élément cible
+    elementsCibles.forEach(elementCible => {
+        elementCible.addEventListener('mouseenter', () => {
+            // Récupérez le texte à afficher à partir de l'attribut data-text
+            const textToDisplay = elementCible.getAttribute('data-text');
+
+            // Affichez le texte à afficher dans l'élément à afficher
+            elementAafficher.textContent = textToDisplay;
+
+            // Positionnez l'élément à afficher à la position de la souris
+            document.addEventListener('mousemove', (e) => {
+                elementAafficher.style.left = `${e.clientX}px`;
+                elementAafficher.style.top = `${e.clientY}px`;
+            });
+
+            // Affichez l'élément à afficher
+            elementAafficher.style.display = 'block';
+        });
+
+        // Ajoutez un gestionnaire d'événement lorsque la souris quitte l'élément cible
+        elementCible.addEventListener('mouseleave', () => {
+            // Masquez l'élément à afficher
+            elementAafficher.style.display = 'none';
+
+            // Supprimez le gestionnaire d'événement mousemove pour arrêter de suivre la souris
+            document.removeEventListener('mousemove', () => {});
+        });
+    });
+</script>
+</body>
+</html>
