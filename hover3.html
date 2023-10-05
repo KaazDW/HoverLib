@@ -1,125 +1,95 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Exemple de survol réutilisable avec position dynamique</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* Style pour l'élément à afficher au survol */
-        /* .elementAafficher {
-            display: none;
-            position: absolute;
-            background-color: #fff;
+        .elementCible {
+            position: relative;
+            display: inline-block;
+            margin: 10px;
             padding: 10px;
             border: 1px solid #ccc;
-            margin-top: 55px;
-          
-            z-index: 100; /* Assure que l'élément est au-dessus de tout */
-        /* } */
-        a{
-            padding: 15px 30px;
-            margin: 15px;
-            user-select: none;
-            border: 3px solid green;
-            transition: 0.5s linear;
+            cursor: pointer;
         }
-        div.container{
-            margin: auto;
-            margin-top: 25vh;
-            width: 50%;
-            text-align: center;
+
+        .elementCible:hover::before {
+            content: attr(data-text);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            border-radius: 3px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .elementCible:hover::before {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
+    <div class="elementCible" data-text="Texte 1">Élément 1</div>
+    <div class="elementCible" data-text="Texte 2">Élément 2</div>
+    <div class="elementCible" data-text="Texte 3">Élément 3</div>
 
-<!-- Éléments cibles réutilisables -->
-<div class="container">
-    <a href="#" class="elementCible" data-text="Hello">Bonjour</a>
-    <a href="#" class="elementCible" data-text="Good Bye">Au revoir</a>
-    <a href="#" class="elementCible" data-text="Good Night">Bonne nuit</a>
-</div>
+    <script>
+        const elements = document.querySelectorAll('.elementCible');
 
-<!-- Élément à afficher réutilisable -->
-<div class="elementAafficher"></div>
+        elements.forEach(element => {
+            element.style.position = 'relative';
+            element.style.display = 'inline-block';
+            element.style.margin = '10px';
+            element.style.padding = '10px';
+            element.style.border = '1px solid #ccc';
+            element.style.cursor = 'pointer';
 
-<script>
-
-    function Tag(n){
-        // Sélectionnez tous les éléments cibles
-        const elementsCibles = document.querySelectorAll('.elementCible');
-
-        // Sélectionnez l'élément à afficher
-        const elementAafficher = document.querySelector('.elementAafficher');
-
-        // Ajoutez un gestionnaire d'événement au survol de chaque élément cible
-        elementsCibles.forEach(elementCible => {
-            elementCible.addEventListener('mouseenter', () => {
-                // Récupérez le texte à afficher à partir de l'attribut data-text
-                const textToDisplay = elementCible.getAttribute('data-text');
-
-                // Copiez les propriétés de position de l'élément cible vers l'élément à afficher
-                const rect = elementCible.getBoundingClientRect();
-                elementAafficher.style.top = `${rect.top}px`;
-                elementAafficher.style.left = `${rect.left}px`;
-
-                // Affichez le texte à afficher dans l'élément à afficher
-                elementAafficher.textContent = textToDisplay;
-                elementAafficher.style.display = 'block';
+            element.addEventListener('mouseover', () => {
+                element.style.backgroundColor = '#eee'; 
             });
 
-            // Ajoutez un gestionnaire d'événement lorsque la souris quitte l'élément cible
-            elementCible.addEventListener('mouseleave', () => {
-                // Masquez l'élément à afficher
-                elementAafficher.style.display = 'none';
+            element.addEventListener('mouseout', () => {
+                element.style.backgroundColor = ''; 
+            });
+
+            element.addEventListener('mouseenter', () => {
+                const text = element.getAttribute('data-text');
+                const tooltip = document.createElement('div');
+                tooltip.textContent = text;
+                tooltip.style.position = 'absolute';
+                tooltip.style.top = '50%';
+                tooltip.style.left = '50%';
+                tooltip.style.transform = 'translate(-50%, -50%)';
+                tooltip.style.backgroundColor = '#333';
+                tooltip.style.color = '#fff';
+                tooltip.style.padding = '5px';
+                tooltip.style.borderRadius = '3px';
+                tooltip.style.whiteSpace = 'nowrap';
+                tooltip.style.opacity = '0';
+                tooltip.style.transition = 'opacity 0.3s ease-in-out';
+
+                element.appendChild(tooltip);
+
+                setTimeout(() => {
+                    tooltip.style.opacity = '1';
+                }, 10);
+            });
+
+            element.addEventListener('mouseleave', () => {
+                const tooltip = element.querySelector('div');
+                if (tooltip) {
+                    setTimeout(() => {
+                        tooltip.remove();
+                    }, 300);
+                    tooltip.style.opacity = '0';
+                }
             });
         });
-
-
-        const head = document.head || document.getElementsByTagName('head')[0];
-        const styleElement = document.createElement('style');
-        let css =""
-        if(n === "up"){
-            console.log("up")
-            css = `
-                .elementAafficher {
-                display: none;
-                position: absolute;
-                background-color: #fff;
-                padding: 10px;
-                border: 1px solid #ccc;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                z-index: 100;
-            }
-            `;
-        } else if(n === 'down'){
-            console.log("down")
-            css = `
-            .elementAafficher {
-                display: none;
-                position: absolute;
-                background-color: #fff;
-                padding: 10px;
-                border: 1px solid #ccc;
-                margin-top: 55px; /* Notez que nous avons supprimé le signe '+' */
-                z-index: 100;
-            }
-            `;
-        }
-        // css += '.elementAafficher { z-index: 100; }';
-
-        styleElement.type = 'text/css';
-        if (styleElement.styleSheet) {
-            // Pour les navigateurs Internet Explorer
-            styleElement.styleSheet.cssText = css;
-        } else {
-            styleElement.appendChild(document.createTextNode(css));
-        }
-        head.appendChild(styleElement);
-    }
-
-    Tag('up')
-
-</script>
+    </script>
 </body>
 </html>
