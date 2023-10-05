@@ -34,62 +34,59 @@
     </style>
 </head>
 <body>
-    <div class="elementCible" data-text="Texte 1">Élément 1</div>
-    <div class="elementCible" data-text="Texte 2">Élément 2</div>
-    <div class="elementCible" data-text="Texte 3">Élément 3</div>
+    <a class="label-up" data-text="Texte 1">Élément 1</a>
+    <a class="label-down" data-text="Texte 2">Élément 2</a>
+    <a class="label-right" data-text="Texte 3">Élément 3</a>
+    <a class="label-left" data-text="Texte 3">Élément 4</a>
+    <a class="label-down" data-text="Texte 3">Élément 5</a>
+    <a class="label-down" data-text="Texte 3">Élément 6</a>
+    <a class="label-right" data-text="Texte 3">Élément 7</a>
 
     <script>
-        const elements = document.querySelectorAll('.elementCible');
+        // labelify.js
+        function initializeLabelify() {
+            const elementSelectors = {
+                "label-up": ".label-up",
+                "label-down": ".label-down",
+                "label-right": ".label-right",
+                "label-left": ".label-left"
+            };
+            const missingElements = [];
 
-        elements.forEach(element => {
-            element.style.position = 'relative';
-            element.style.display = 'inline-block';
-            element.style.margin = '10px';
-            element.style.padding = '10px';
-            element.style.border = '1px solid #ccc';
-            element.style.cursor = 'pointer';
+            for (const elementType in elementSelectors) {
+                const selector = elementSelectors[elementType];
+                const elements = document.querySelectorAll(selector);
 
-            element.addEventListener('mouseover', () => {
-                element.style.backgroundColor = '#eee'; 
-            });
-
-            element.addEventListener('mouseout', () => {
-                element.style.backgroundColor = ''; 
-            });
-
-            element.addEventListener('mouseenter', () => {
-                const text = element.getAttribute('data-text');
-                const tooltip = document.createElement('div');
-                tooltip.textContent = text;
-                tooltip.style.position = 'absolute';
-                tooltip.style.top = '50%';
-                tooltip.style.left = '50%';
-                tooltip.style.transform = 'translate(-50%, -50%)';
-                tooltip.style.backgroundColor = '#333';
-                tooltip.style.color = '#fff';
-                tooltip.style.padding = '5px';
-                tooltip.style.borderRadius = '3px';
-                tooltip.style.whiteSpace = 'nowrap';
-                tooltip.style.opacity = '0';
-                tooltip.style.transition = 'opacity 0.3s ease-in-out';
-
-                element.appendChild(tooltip);
-
-                setTimeout(() => {
-                    tooltip.style.opacity = '1';
-                }, 10);
-            });
-
-            element.addEventListener('mouseleave', () => {
-                const tooltip = element.querySelector('div');
-                if (tooltip) {
-                    setTimeout(() => {
-                        tooltip.remove();
-                    }, 300);
-                    tooltip.style.opacity = '0';
+                if (elements.length === 0) {
+                    missingElements.push(elementType);
+                } else {
+                    elements.forEach((element) => {
+                        switch (elementType) {
+                            case "label-up":
+                                element.style.backgroundColor = "yellow";
+                                break;
+                            case "label-down":
+                                element.style.backgroundColor = "green";
+                                break;
+                            case "label-right":
+                                element.style.backgroundColor = "blue";
+                                break;
+                            case "label-left":
+                                element.style.backgroundColor = "red";
+                                break;
+                            default:
+                                break;  
+                        }
+                    });
                 }
-            });
-        });
+            }
+
+            if (missingElements.length > 0) {
+                console.warn(`Les éléments suivants sont manquants : ${missingElements.join(', ')}`);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", initializeLabelify);
     </script>
 </body>
 </html>

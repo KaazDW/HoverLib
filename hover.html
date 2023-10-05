@@ -1,49 +1,108 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Exemple de survol réutilisable</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        *{
-            margin: 0;
-            padding: 0;
-        }
-        body{
-            background-color: #222;
-           
-        }
-        div.corps{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            width: 100%;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-weight: 700;
-        }
-        a{
-            color: white;
-            text-decoration: none;
-            text-transform: uppercase;
-            margin: 15px;
-        }
-        .elementAafficher {
-            display: none;
+        .elementCible {
             position: relative;
-            background-color: #fff;
-            padding: 10px; 
-            margin-top: -70px;
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
             border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        .elementCible:hover::before {
+            content: attr(data-text);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            border-radius: 3px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .elementCible:hover::before {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
-    <div class="corps">
-        <a href="#" class="elementCible" data-text="Hello">Bonjour</a>
-        <a href="#" class="elementCible" data-text="Good Bye">Au revoir</a>
-        <a href="#" class="elementCible" data-text="Good Night">Bonne nuit</a>
-    </div>
-    <div class="elementAafficher"></div>
+    <a class="label-up" data-text="Texte 1">Élément 1</a>
+    <a class="label-down" data-text="Texte 2">Élément 2</a>
+    <a class="elementCible" data-text="Texte 3">Élément 3</a>
+    <a class="elementCible" data-text="Texte 3">Élément 4</a>
+    <a class="elementCible" data-text="Texte 3">Élément 5</a>
+    <a class="elementCible" data-text="Texte 3">Élément 6</a>
+    <a class="elementCible" data-text="Texte 3">Élément 7</a>
 
-<script src="app.js"></script>
+    <script>
+
+        const labelup = document.querySelectorAll('.label-up');
+        const labelright = document.querySelectorAll('.label-right');
+ 
+        const elements = document.querySelectorAll('.elementCible');
+
+
+
+        function labelifyContent(){
+            elements.forEach(element => {
+                element.style.position = 'relative';
+                element.style.display = 'inline-block';
+                element.style.margin = '10px';
+                element.style.padding = '10px';
+                element.style.border = '1px solid #ccc';
+                element.style.cursor = 'pointer';
+
+                element.addEventListener('mouseover', () => {
+                    element.style.backgroundColor = '#eee'; 
+                });
+
+                element.addEventListener('mouseout', () => {
+                    element.style.backgroundColor = ''; 
+                });
+
+                element.addEventListener('mouseenter', () => {
+                    const text = element.getAttribute('data-text');
+                    const tooltip = document.createElement('div');
+                    tooltip.textContent = text;
+                    tooltip.style.position = 'absolute';
+                    tooltip.style.top = '50%';
+                    tooltip.style.left = '50%';
+                    tooltip.style.transform = 'translate(-50%, -50%)';
+                    tooltip.style.backgroundColor = '#333';
+                    tooltip.style.color = '#fff';
+                    tooltip.style.padding = '5px';
+                    tooltip.style.borderRadius = '3px';
+                    tooltip.style.whiteSpace = 'nowrap';
+                    tooltip.style.opacity = '0';
+                    tooltip.style.transition = 'opacity 0.3s ease-in-out';
+
+                    element.appendChild(tooltip);
+
+                    setTimeout(() => {
+                        tooltip.style.opacity = '1';
+                    }, 10);
+                });
+
+                element.addEventListener('mouseleave', () => {
+                    const tooltip = element.querySelector('div');
+                    if (tooltip) {
+                        setTimeout(() => {
+                            tooltip.remove();
+                        }, 300);
+                        tooltip.style.opacity = '0';
+                    }
+                });
+            });
+        }
+        
+    </script>
 </body>
 </html>
