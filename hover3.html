@@ -4,21 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        .elementCible {
+        .tooltip-container {
             position: relative;
             display: inline-block;
-            margin: 10px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            cursor: pointer;
         }
 
-        .elementCible:hover::before {
-            content: attr(data-text);
+        .tooltip {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             background-color: #333;
             color: #fff;
             padding: 5px;
@@ -26,129 +18,67 @@
             white-space: nowrap;
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
+            z-index: 1; /* Ensure tooltip appears above other elements */
         }
 
-        .elementCible:hover::before {
+        .tooltip-container:hover .tooltip {
             opacity: 1;
         }
+
+        /* Position classes */
+        .top .tooltip {
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 5px;
+
+        }
+
+        .right .tooltip {
+            top: 50%;
+            left: 100%;
+            transform: translateY(-50%);
+            margin-left: 5px;
+
+        }
+
+        .bottom .tooltip {
+            top: 100%;
+            left: 50%;
+            margin-top: 5px;
+            transform: translateX(-50%);
+        }
+
+        .left .tooltip {
+            top: 50%;
+            right: 100%;
+            transform: translateY(-50%);
+            margin-right: 15px;
+        }
     </style>
+    <title>Tooltip Example</title>
 </head>
 <body>
-    <a class="label-up" data-text="Texte 1">Élément 1</a>
-    <a class="label-down" data-text="Texte 2">Élément 2</a>
-    <a class="label-right" data-text="Texte 3">Élément 3</a>
-    <a class="label-left" data-text="Texte 3">Élément 4</a>
-    <a class="label-down" data-text="Texte 3">Élément 5</a>
-    <a class="label-down" data-text="Texte 3">Élément 6</a>
-    <a class="label-right" data-text="Texte 3">Élément 7</a>
-
+    <br/><br/><br/>
+    <div class="tooltip-container top" data-tooltip="Top Tooltip">Hover me (Top)</div><br/><br/>
+    <div class="tooltip-container right" data-tooltip="Right Tooltip">Hover me (Right)</div><br/><br/>
+    <div class="tooltip-container bottom" data-tooltip="Bottom Tooltip">Hover me (Bottom)</div><br/><br/>
+    <div class="tooltip-container left" data-tooltip="Left Tooltip">Hover me (Left)</div><br/><br/>
+    <br/>
     <script>
-        // labelify.js
+        document.addEventListener('DOMContentLoaded', function () {
+            var labels = document.querySelectorAll('.tooltip-container');
 
-        function createLabel(element, elementType){
-            element.style.position = 'relative';
-            element.style.display = 'inline-block';
-            element.style.margin = '10px';
-            element.style.padding = '10px';
-            element.style.border = '1px solid #ccc';
-            element.style.cursor = 'pointer';
+            labels.forEach(function (label) {
+                var tooltipText = label.getAttribute('data-tooltip');
 
-            element.addEventListener('mouseover', () => {
-                element.style.backgroundColor = '#eee'; 
+                var tooltip = document.createElement('div');
+                tooltip.className = 'tooltip';
+                tooltip.textContent = tooltipText;
+
+                label.appendChild(tooltip);
             });
-
-            element.addEventListener('mouseout', () => {
-                element.style.backgroundColor = ''; 
-            });
-
- 
-            element.addEventListener('mouseenter', () => {
-                const elementHeight = element.offsetHeight;
-                const elementWidth = element.offsetWidth;
-                console.log(elementHeight, elementWidth)
-                const text = element.getAttribute('data-text');
-                const tooltip = document.createElement('div');
-                tooltip.textContent = text;
-                tooltip.style.position = 'absolute';
-                tooltip.style.top = '50%';
-                tooltip.style.left = '50%';
-                tooltip.style.transform = 'translate(-50%, -50%)';
-                tooltip.style.color = '#fff';
-                tooltip.style.padding = '5px';
-                tooltip.style.backgroundColor = "green";
-                tooltip.style.borderRadius = '3px';
-                tooltip.style.whiteSpace = 'nowrap';
-                tooltip.style.opacity = '0';
-                tooltip.style.transition = 'opacity 0.3s ease-in-out';
-
-                switch (elementType) {
-                    case "label-up":
-                        tooltip.style.marginTop = -elementHeight + "px";
-                        break;
-                    case "label-down":
-                        tooltip.style.marginTop = elementHeight + "px";
-                        break;
-                    case "label-right":
-                        tooltip.style.marginRight = -elementWidth + "px";
-                        break;
-                    case "label-left":
-                        tooltip.style.marginLeft = -elementWidth + "px";
-                        break;
-                    default:
-                        break;  
-                }
-
-                element.appendChild(tooltip);
-
-                setTimeout(() => {
-                    tooltip.style.opacity = '1';
-                }, 10);
-           
-            });
-
-            element.addEventListener('mouseleave', () => {
-                const tooltip = element.querySelector('div');
-                if (tooltip) {
-                    setTimeout(() => {
-                        tooltip.remove();
-                    }, 300);
-                    tooltip.style.opacity = '0';
-                }
-            });
-        }
-
-
-        function initializeLabelify() {
-            const elementSelectors = {
-                "label-up": ".label-up",
-                "label-down": ".label-down",
-                "label-right": ".label-right",
-                "label-left": ".label-left"
-            };
-            const missingElements = [];
-
-            for (const elementType in elementSelectors) {
-                const selector = elementSelectors[elementType];
-                const elements = document.querySelectorAll(selector);
-
-                if (elements.length === 0) {
-                    missingElements.push(elementType);
-                } else {
-                    elements.forEach((element) => {
-                        
-                        createLabel(element, elementType)
-
-                    });
-                }
-            }
-
-            if (missingElements.length > 0) {
-                console.warn(`Les éléments suivants sont manquants : ${missingElements.join(', ')}`);
-            }
-        }
-
-
-        document.addEventListener("DOMContentLoaded", initializeLabelify);
+        });
     </script>
 </body>
 </html>
