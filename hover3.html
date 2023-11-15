@@ -4,71 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+        *{
+            font-family: 'Poppins', sans-serif;
+        }
         .tooltip-container {
             position: relative;
             display: inline-block;
         }
 
-        .tooltip {
+        /* .tooltip {
             position: absolute;
             background-color: #333;
             color: #fff;
-            padding: 5px;
-            border-radius: 3px;
+            padding: 7px 12px;
+            margin-top: 5px;
+            border-radius: 10px;
             white-space: nowrap;
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
-            z-index: 1; /* Ensure tooltip appears above other elements */
-        }
+            pointer-events: none; 
+            z-index: 999; 
+            left: 50%;
+            transform: translateX(-50%);
+        } */
 
         .tooltip-container:hover .tooltip {
             opacity: 1;
-        }
-
-        /* Position classes */
-        .top .tooltip {
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            margin-bottom: 5px;
-
-        }
-
-        .right .tooltip {
-            top: 50%;
-            left: 100%;
-            transform: translateY(-50%);
-            margin-left: 5px;
-
-        }
-
-        .bottom .tooltip {
-            top: 100%;
-            left: 50%;
-            margin-top: 5px;
-            transform: translateX(-50%);
-        }
-
-        .left .tooltip {
-            top: 50%;
-            right: 100%;
-            transform: translateY(-50%);
-            margin-right: 15px;
         }
     </style>
     <title>Tooltip Example</title>
 </head>
 <body>
     <br/><br/><br/>
-    <div class="tooltip-container top" data-tooltip="Top Tooltip">Hover me (Top)</div><br/><br/>
-    <div class="tooltip-container right" data-tooltip="Right Tooltip">Hover me (Right)</div><br/><br/>
-    <div class="tooltip-container bottom" data-tooltip="Bottom Tooltip">Hover me (Bottom)</div><br/><br/>
-    <div class="tooltip-container left" data-tooltip="Left Tooltip">Hover me (Left)</div><br/><br/>
-    <br/>
+    <div style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 15px;">
+        <p class="tooltip-container" data-tooltip="Hi !">Hover me</p>
+        <p class="tooltip-container" data-tooltip="I'm a tooltip">Me too</p>
+        <p class="tooltip-container" data-tooltip="Hohoho look at me bitch !">One more</p>
+    </div>
+    <br/><br/><br/>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var labels = document.querySelectorAll('.tooltip-container');
+            var tooltips = document.querySelectorAll('.tooltip');
 
+            tooltips.forEach(function (tooltip) {
+                Object.assign(tooltip.style, {
+                    position: 'absolute',
+                    backgroundColor: '#333',
+                    color: '#fff',
+                    padding: '7px 12px',
+                    marginTop: '5px',
+                    borderRadius: '10px',
+                    whiteSpace: 'nowrap',
+                    opacity: '0',
+                    transition: 'opacity 0.3s ease-in-out',
+                    pointerEvents: 'none',
+                    zIndex: '999',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                });
+            });
+            
             labels.forEach(function (label) {
                 var tooltipText = label.getAttribute('data-tooltip');
 
@@ -77,6 +74,14 @@
                 tooltip.textContent = tooltipText;
 
                 label.appendChild(tooltip);
+
+                label.addEventListener('mouseover', function () {
+                    tooltip.style.opacity = '1';
+                });
+
+                label.addEventListener('mouseout', function () {
+                    tooltip.style.opacity = '0';
+                });
             });
         });
     </script>
