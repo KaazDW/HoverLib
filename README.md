@@ -20,7 +20,7 @@ https://kaazdw.github.io// <- nop
 
 <b>1 - Include JavaScript Source.</b>
 ```javascript
-<script type="text/javascript" src="https://raw.githubusercontent.com/KaazDW/Tooltiper/main/tooltiper.js"></script>
+<script type="text/javascript" src="https://raw.githubusercontent.com/KaazDW/Tooltiper/v1/tooltiper.js"></script>
 ```
 <b>2 - Set HTML.</b>
 ```html
