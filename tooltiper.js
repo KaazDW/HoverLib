@@ -5,10 +5,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     labels.forEach(function (label) {
         let tooltipText = label.getAttribute('data-tooltip');
+        let words = tooltipText.split(' ');
+        let tooltipContent = '';
+
+        for (let i = 0; i < words.length; i++) {
+            tooltipContent += words[i];
+            if ((i + 1) % 5 === 0 && i !== words.length - 1) {
+                tooltipContent += '<br>';
+            } else {
+                tooltipContent += ' ';
+            }
+        }
 
         let tooltip = document.createElement('div');
         tooltip.className = 'tooltip';
-        tooltip.textContent = tooltipText;
+        tooltip.innerHTML = tooltipContent; 
 
         label.appendChild(tooltip);
 
